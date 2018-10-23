@@ -12,7 +12,7 @@ Generate information for questions involving a single sample or population
 \describe{
 \item{\code{alpha}}{Alpha for significance testing}
 
-\item{\code{ci}}{Confidence Interval (2 Number Vector)}
+\item{\code{ci}}{Confidence Interval (Two Number Vector)}
 
 \item{\code{ci.lb}}{Confidence Interval: Lower Bound}
 

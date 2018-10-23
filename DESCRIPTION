@@ -1,6 +1,6 @@
 Package: quantgen
 Type: Package
-Title: What the Package Does (Title Case)
+Title: Columbia Quantitative Analysis Data Generator
 Version: 0.5.0
 Author: David Wickland & Marwan Lisser
 Maintainer: David Wickland <david.wickland@columbia.edu>
