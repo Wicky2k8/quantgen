@@ -1,6 +1,6 @@
 Package: quantgen
 Type: Package
-Title: Columbia Quantitative Analysis Data Generator
+Title: Columbia SIPA: Quantitative Analysis Data Generator (U6500)
 Version: 0.5.0
 Author: David Wickland & Marwan Lisser
 Maintainer: David Wickland <david.wickland@columbia.edu>
