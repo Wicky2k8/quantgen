@@ -1,0 +1,11 @@
+Package: quantgen
+Type: Package
+Title: What the Package Does (Title Case)
+Version: 0.5.0
+Author: David Wickland & Marwan Lisser
+Maintainer: David Wickland <david.wickland@columbia.edu>
+Description: Generate distribution and sample information to create randomized statistics questions
+License: GPL-3
+Encoding: UTF-8
+LazyData: FALSE
+RoxygenNote: 6.1.0
