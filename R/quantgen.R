@@ -345,3 +345,333 @@ sampleDist<-function(sample=NA, population=NA, size=NA_real_, mean=NA_real_, sd=
   mys@z.p<-round(mys@z.p,4)
   return(mys)
 }
+
+
+#' @title sample2Dist
+#'
+#' @description Generate information for questions involving a two samples
+#'
+#' @slot alpha Alpha for significance testing
+#' @slot ci Confidence Interval (Two Number Vector)
+#' @slot ci.lb Confidence Interval: Lower Bound
+#' @slot ci.ub Confidence Interval: Upper Bound
+#' @slot conclusion
+#' @slot confidence.level Level for confidence interval calculation in percentage points
+#' @slot df Degrees of freedom
+#' @slot df.D Degrees of freedom Table D
+#' @slot estimator The value of the estimator (sample mean 1 - sample mean 0)
+#' @slot equal.sd TRUE for equal standard deviations, FALSE for different standard deviations (Defaults to FALSE)
+#' @slot greater.than TRUE for Greater Than One-Tailed Testing, FALSE for Less Than (Defaults to FALSE)
+#' @slot margin Margin of error for confidence interval
+#' @slot null level for Null Hypothesis
+#' @slot numerator Numerator for the statistic
+#' @slot pop.sd.0 Population 0 Standard Deviation
+#' @slot pop.sd.1 Population 1 Standard Deviation
+#' @slot pooled.s Pooled Standard Deviation
+#' @slot samp.mean.0 Sample 0 Mean
+#' @slot samp.mean.1 Sample 1 Mean
+#' @slot samp.sd.0 Sample 0 Standard Deviation
+#' @slot samp.sd.1 Sample 1 Standard Deviation
+#' @slot samp.size.0 Sample 0 Size
+#' @slot samp.size.1 Sample 1 Size
+#' @slot samp.t Hypothesis Test t-value
+#' @slot samp.t.p Hypothesis Test p-value (for t-method) (Two Number Vector, sometimes)
+#' @slot samp.t.pvalue The verbose statement on p-value (for t-method)
+#' @slot samp.t.sig Hypothesis Test significance (for t-method)
+#' @slot samp.t.sig.sign Hypothesis Test sign, > or < alpha (for t-method)
+#' @slot samp.t.sig.verb Hypothesis Test verbose significance (for t-method)
+#' @slot samp.z Hypothesis Test z-value
+#' @slot samp.z.p Hypothesis Test p-value (for z method)
+#' @slot samp.z.pvalue The verbose statement on p-value (for z method)
+#' @slot samp.z.sig Hypothesis Test significance (for z-method)
+#' @slot samp.z.sig.sign Hypothesis Test sign, > or < alpha (for z-method)
+#' @slot samp.z.sig.verb Hypothesis Test verbose significance (for z-method)
+#' @slot sd.estimator The standard deviation of the estimator
+#' @slot se.estimator The standard error of the estimator
+#' @slot sign Testing sign (>,<,≠)
+#' @slot t.star Critical value for confidence interval from the t-distribution (Table D version)
+#' @slot two.tail TRUE for Two-Tailed testing, FALSE for One-Tailed (Defaults to FALSE)
+#' @slot z.star Critical value for confidence interval from the Standard Normal distribution (Table A version)
+#' @exportClass sample2Dist
+setClass("sample2Dist",
+         slots=c(
+           alpha="numeric",
+           ci="numeric",
+           ci.lb="numeric",
+           ci.ub="numeric",
+           conclusion="character",
+           confidence.level="numeric",
+           df="numeric",
+           df.D="numeric",
+           greater.than="logical",
+           equal.sd="logical",
+           estimator="numeric",
+           margin="numeric",
+           null="numeric",
+           numerator="numeric",
+           pop.sd.0="numeric",
+           pop.sd.1="numeric",
+           pooled.s="numeric",
+           samp.mean.0="numeric",
+           samp.mean.1="numeric",
+           samp.sd.0="numeric",
+           samp.sd.1="numeric",
+           samp.size.0="numeric",
+           samp.size.1="numeric",
+           samp.t="numeric",
+           samp.t.p="numeric",
+           samp.t.pvalue="character"
+           samp.t.sig="logical",
+           samp.t.sig.sign="character",
+           samp.t.sig.verb="character",
+           samp.z="numeric",
+           samp.z.p="numeric",
+           samp.z.pvalue="character",
+           samp.z.sig="logical",
+           samp.z.sig.sign="character",
+           samp.z.sig.verb="character",
+           sd.estimator="numeric",
+           se.estimator="numeric",
+           sign="character",
+           t.star="numeric"
+           two.tail="logical",
+           z.star="numeric"
+         ),
+         prototype=list(
+           alpha=as.numeric(NA),
+           ci=as.numeric(NA),
+           ci.lb=as.numeric(NA),
+           ci.ub=as.numeric(NA),
+           conclusion=as.character(NA),
+           confidence.level=as.numeric(NA),
+           df=as.numeric(NA),
+           df.D=as.numeric(NA),
+           greater.than=NA,
+           equal.sd=NA,
+           estimator=as.numeric(NA),
+           margin=as.numeric(NA),
+           null=as.numeric(NA),
+           numerator=as.numeric(NA),
+           pop.sd.0=as.numeric(NA),
+           pop.sd.1=as.numeric(NA),
+           pooled.s=as.numeric(NA),
+           samp.mean.0=as.numeric(NA),
+           samp.mean.1=as.numeric(NA),
+           samp.sd.0=as.numeric(NA),
+           samp.sd.1=as.numeric(NA),
+           samp.size.0=as.numeric(NA),
+           samp.size.1=as.numeric(NA),
+           samp.t=as.numeric(NA),
+           samp.t.p=as.numeric(NA),
+           samp.t.pvalue=as.character(NA),
+           samp.t.sig=NA,
+           samp.t.sig.sign=as.character(NA),
+           samp.t.sig.verb=as.character(NA),
+           samp.z=as.numeric(NA),
+           samp.z.p=as.numeric(NA),
+           samp.z.pvalue=as.character(NA),
+           samp.z.sig=NA,
+           samp.z.sig.sign=as.character(NA),
+           samp.z.sig.verb=as.character(NA),
+           sd.estimator=as.numeric(NA),
+           se.estimator=as.numeric(NA),
+           sign=as.character(NA),
+           t.star=as.numeric(NA)
+           two.tail=NA,
+           z.star=as.numeric(NA)
+         )
+)
+
+#' @title sample2Dist
+#'
+#' @description Create a "sampe2Dist" object to generate information for questions involving two samples
+#'
+#' @param samples Previous sample2Dist Object
+#' @param eqal.sd The standard deviations of the two populations are equal
+#' @param samp.size.0 Size of the sample 0
+#' @param samp.size.1 Size of the sample 1
+#' @param samp.mean.0 Mean of the sample 0
+#' @param samp.mean.1 Mean of the sample 1
+#' @param samp.sd.0 Standard deviation of the sample 0
+#' @param samp.sd.1 Standard deviation of the sample 1
+#' @param two.tail TRUE for Two-Tailed testing, FALSE for One-Tailed (Defaults to FALSE)
+#' @param greater.than TRUE for Greater Than One-Tailed Testing, FALSE for Less Than (Defaults to FALSE)
+#' @param alpha Alpha for signficance testing
+#' @param pop.sd.0 Population 0 Standard Deviation
+#' @param pop.sd.1 Population 1 Standard Deviation
+#' @param confidence.level Population 1 Standard Deviation
+#'
+#' @return sample2Dist
+#'
+#' @examples sample2Dist(equal.sd=FALSE,samp.size.0=100,samp.size.1=50,samp.mean.0=2,samp.mean.1=3,samp.sd.0=3,samp.sd.1=4,two.tail=TRUE,alpha=0.05)
+#'
+#' @export sample2Dist
+sample2Dist<-function(samples=NA, equal.sd=NA_real_, samp.size.0=NA_real_, samp.size.1=NA_real_, samp.mean.0=NA_real_, samp.mean.1=NA_real_, samp.sd.0=NA_real_, samp.sd.1=NA_real_, two.tail=NA_real_, greater.than=NA_real_, alpha=NA_real_, confidence.level=NA_real_, pop.sd.0=NA_real_, pop.sd.1=NA_real_){
+  if(isS4(samples)) {
+    mys<-samples
+  }
+  else {
+    mys<-new("sample2Dist")
+  }
+
+
+
+
+
+
+
+
+  mys@estimator<-mys@samp.mean.1-mys@samp.mean.0
+
+
+
+  if(!is.na(mys@pop.sd.0) & !.isna(mys@pop.sd.1)){
+    # Z distribution
+    # Confidence interval
+    mys@sd.estimator<-ceiling(1000*sqrt(mys@pop.sd.0^2/mys@samp.size.0+mys@pop.sd.1^2/mys@samp.size.1))/1000
+    mys@zstar<-round(abs(qnorm(1-mys@confidence.level/100)),3)
+    mys@margin<-ceiling(1000*mys@zstar*mys@sd.estimator)/1000
+    mys@ci<-c(mys@estimator-mys@margin,mys@estimator+mys@margin)
+    mys@ci.lb<-mys@ci[1]
+    mys@ci.ub<-mys@ci[2]
+    mys@verbose.confidence.interval<-paste("The confidence interval is centered at the value of the estimator is the difference between sample means, that is $\bar x_1-\bar x_0=",mys@samp.mean.1,"-",mys@samp.mean.0,"=",mys@estimator,"$. The standard deviation of the estimator is $\sigma_{\bar X_1-\bar X_0}=\sqrt{\frac{\sigma_1^2}{n_1}+\frac{\sigma_0^2}{n_0}}=\sqrt{\frac{",mys@pop.sd.1,"^2}{",mys@samp.size.1,"}+\frac{"mys@pop.sd.1,"^2}{",mys@samp.size.1,"}}=",mys@sd.estimator,"$. The critical value for a $",mys@confidence.level,"$\% confidence interval is $z^*="mys@z.star,"$, so the margin of error is $m=z^* \cdot \sigma_{\bar X_1-\bar X_0}=",mys@z.star," \cdot ",mys@sd.estimator,"=",mys@margin,"$. The confidence interval is $[\bar x_1-\bar x_0-m,\bar x_1-\bar x_0+m]=[",mys@estimator,"-",mys@margin","mys@estimator,"+",mys@margin,"]=[",mys@ci.lb,",",mys@ci.ub,"]$.",sep="")
+    # Hypothesis testing
+    mys@numerator<-mys@estimator-mys@null
+    mys@samp.z<-ceiling(100*mys@numerator/mys@sd.estimator)/100
+    if(mys@two.tail==1) {
+      mys@samp.z.p<-2*(1-pnorm(abs(mys@samp.z)))
+      mys@samp.z.pvalue<-paste("The p-value is $2 \cdot P(Z>|z|)=2 \cdot P(Z>|",mys@samp.z,"|)=2 \cdot (1-P(Z<",abs(mys@samp.z),")=",mys@samp.z.p,"$",sep="")
+    }else{
+      if(mys@greater.than==1) {
+        mys@samp.z.p<-pnorm(mys@samp.z)
+        mys@samp.z.pvalue<-paste("The p-value is $P(Z>z)=P(Z>",mys@samp.z,")=1-P(Z<",mys@samp.z,")=",mys@samp.z.p,"$",sep="")
+      }else {
+        mys@samp.z.p<-1-pnorm(mys@samp.z)
+        mys@samp.z.pvalue<-paste("The p-value is $P(Z<z)=P(Z<",mys@samp.z,")=",mys@samp.z.p,"$",sep="")
+      }
+    }
+    if(mys@samp.z.p < mys@alpha){
+      mys.samp.z.sig<-T
+      mys.samp.z.sig.sign<-"<"
+      mys.samp.z.verb<-"statistically significant"
+      mys.conclusion<-"We reject the Null Hypothesis and accept the Alternative Hypothesis."
+      mys.samp.z.verbose.testing<-paste("\begin{itemize}\item $H_0: \, \mu_1-\mu_0=",mys@null,"$\item $H_a: \, \mu_1-\mu_0 ",mys@samp.z.sig.sign,mys@null,"$\item $\alpha=",mys@alpha,"$\item $z=\frac{\bar x_1-\bar x_0-",mys@null,"}{\sigma_{\bar X_1-\bar X_0}}=\frac{",mys@estimator,"-",mys@null,"}{\sqrt{\frac{",mys@pop.sigma.1,"^2}{",mys@samp.size.1,"}+\frac{",mys@pop.sigma.0,"^2}{",mys@samp.size.0,"}}}=\frac{",mys@numerator,"}{",mys@sd.estimator,"}=",samp.z,"$\item ",mys@samp.z.pvalue,"\item ",mys@conclusion,"\end{itemize}",sep="")
+    }else{
+      mys.samp.z.sig<-F
+      mys.samp.z.sig.sign<-">"
+      mys.samp.z.verb<-"not statistically significant"
+      mys.conclusion<-"We fail to reject the Null Hypothesis."
+      mys.samp.z.verbose.testing<-paste("\begin{itemize}\item $H_0: \, \mu_1-\mu_0=",mys@null,"$\item $H_a: \, \mu_1-\mu_0 ",mys@samp.z.sig.sign,mys@null,"$\item $\alpha=",mys@alpha,"$\item $z=\frac{\bar x_1-\bar x_0-",mys@null,"}{\sigma_{\bar X_1-\bar X_0}}=\frac{",mys@estimator,"-",mys@null,"}{\sqrt{\frac{",mys@pop.sigma.1,"^2}{",mys@samp.size.1,"}+\frac{",mys@pop.sigma.0,"^2}{",mys@samp.size.0,"}}}=\frac{",mys@numerator,"}{",mys@sd.estimator,"}=",samp.z,"$\item ",mys@samp.z.pvalue,"\item ",mys@conclusion,"\end{itemize}",sep="")
+    }
+
+
+
+
+
+  }
+  else {
+    if(mys@equal.sd==1) {
+      # T distribution equal standard deviations
+      mys@df<-mys@samp.size.0+mys@samp.size.1-2
+      mys@pooled.s<-ceiling(1000*sqrt((mys@samp.sd.0^2*(mys@samp.size.0-1)+mys@samp.sd.1^2*(mys@samp.size.1-1))/mys@df))/1000
+      mys@se.estimator<-ceiling(1000*sqrt(mys@pooled.s^2/mys@samp.size.0+mys@pooled.s^2/mys@samp.size.1))/1000
+      mys@df.D<-
+      mys@tstar<-round(abs(qt(1-mys@confidence.level/100,mys@df.D)),3)
+      mys@margin<-ceiling(1000*mys@tstar*mys@se.estimator)/1000
+      mys@ci<-c(mys@estimator-mys@margin,mys@estimator+mys@margin)
+      mys@ci.lb<-mys@ci[1]
+      mys@ci.ub<-mys@ci[2]
+      mys@verbose.confidence.interval<-paste("The confidence interval is centered at the value of the estimator, which is the difference between sample means, that is $\bar x_1-\bar x_0=",mys@samp.mean.1,"-",mys@samp.mean.0,"=",mys@estimator,"$. The pooled standard deviation is $\sqrt{\frac{s_1^2 \cdot (n_1-1)+s_0^2 \cdot (n_0-1)}{n_1+n_0-2}}=\sqrt{\frac{",mys@samp.sd.1,"^2 \cdot (",mys@samp.size.1,"-1)+",mys@samp.sd.0",^2 \cdot (",mys@samp.size.0,"-1)}{",samp.size.1,"+",samp.size.0,"-2}}=",mys@pooled.s,"$ The standard error of the estimator is $SE_{\bar X_1-\bar X_0}=\sqrt{\frac{s_p^2}{n_1}+\frac{s_p^2}{n_0}}=\sqrt{\frac{",mys@pooled.s,"^2}{",mys@samp.size.1,"}+\frac{"mys@pooled.s,"^2}{",mys@samp.size.1,"}}=",mys@se.estimator,"$. The number of degrees of freedom is the smaller number of degrees of freedom in each sample, which in this case is ",mys@df,". We will use a conservative number of degrees of freedom from Table D, that is ",mys.df.D,". The critical value for a $",mys@confidence.level,"$\% confidence interval is $z^*="mys@t.star,"$, so the margin of error is $m=t^* \cdot SE_{\bar X_1-\bar X_0}=",mys@t.star," \cdot ",mys@se.estimator,"=",mys@margin,"$. The confidence interval is $[\bar x_1-\bar x_0-m,\bar x_1-\bar x_0+m]=[",mys@estimator,"-",mys@margin","mys@estimator,"+",mys@margin,"]=[",mys@ci.lb,",",mys@ci.ub,"]$.",sep="")
+      # Hypothesis testing
+      mys@numerator<-mys@estimator-mys@null
+      mys@samp.t<-ceiling(100*mys@numerator/mys@se.estimator)/100
+      if(mys@two.tail==1) {
+        mys@samp.t.p<-2*c(ptb[(ptb<abs(mys@samp.t))][1],ptb[(ptb>abs(mys@samp.t))][length(ptb[(ptb>abs(mys@samp.t))])])
+        mys@samp.t.pvalue<-paste("The p-value is $2 \cdot P(T>|t|)=2 \cdot P(T>|",mys@samp.t,"|)$ in the t-distribution with ",mys@df," degrees of freedom. Using ",mys@df.D," degrees of freedom from Table D, $P(T>",abs(mys@samp.t),") \in (",mys@samp.t.p[1]/2,",",mys@samp.t.p[2]/2,")$ so the p-value is in the $(",mys@samp.t.p[1],",",mys@samp.t.p[2],")$ interval.",sep="")
+      }else{
+        if(mys@greater.than==1) {
+          if(mys@samp.t>0) {
+            mys@samp.t.p<-c(ptb[(ptb<abs(mys@samp.t))][1],ptb[(ptb>abs(mys@samp.t))][length(ptb[(ptb>abs(mys@samp.t))])])
+            mys@samp.t.pvalue<-paste("The p-value is $P(T>t)=P(T>",mys@samp.t,")$ in the t-distribution with ",mys@df," degrees of freedom. Using ",mys@df.D," degrees of freedom from Table D, $P(T>",mys@samp.t,") \in (",mys@samp.t.p[1],",",mys@samp.t.p[2],")$.",sep="")
+          }else{
+            mys@samp.t.p<-1-c(ptb[(ptb>abs(mys@samp.t))][length(ptb[(ptb>abs(mys@samp.t))])],ptb[(ptb<abs(mys@samp.t))][1])
+            mys@samp.t.pvalue<-paste("The p-value is $P(T<t)=P(T<",mys@samp.t,")$ in the t-distribution with ",mys@df," degrees of freedom. That is larger than 50\%. More precisely, using ",mys@df.D," degrees of freedom from Table D, $P(T>",mys@samp.t,")=P(T<",-mys@samp.t,")=1-P(T>",-mys@samp.t,") \in (",mys@samp.t.p[1],",",mys@samp.t.p[2],")$.",sep="")
+          }
+        }else {
+          if(mys@samp.t<0) {
+            mys@samp.t.p<-c(ptb[(ptb<abs(mys@samp.t))][1],ptb[(ptb>abs(mys@samp.t))][length(ptb[(ptb>abs(mys@samp.t))])])
+            mys@samp.t.pvalue<-paste("The p-value is $P(T<t)=P(T<",mys@samp.t,")=P(T>",-mys@samp.t,")$ in the t-distribution with ",mys@df," degrees of freedom. Using ",mys@df.D," degrees of freedom from Table D, $P(T>",-mys@samp.t,") \in (",mys@samp.t.p[1],",",mys@samp.t.p[2],")$.",sep="")
+          }else {
+            mys@samp.t.p<-1-c(ptb[(ptb>abs(mys@samp.t))][length(ptb[(ptb>abs(mys@samp.t))])],ptb[(ptb<abs(mys@samp.t))][1])
+            mys@samp.t.pvalue<-paste("The p-value is $P(T<t)=P(T<",mys@samp.t,")$ in the t-distribution with ",mys@df," degrees of freedom. That is larger than 50\%. More precisely, using ",mys@df.D," degrees of freedom from Table D, $P(T<",mys@samp.t,")=1-P(T>",mys@samp.t,") \in (",mys@samp.t.p[1],",",mys@samp.t.p[2],")$.",sep="")
+          }
+        }
+      }
+      if(mys@samp.t.p[1] < mys@alpha){
+        mys.samp.t.sig<-T
+        mys.samp.t.sig.sign<-"<"
+        mys.samp.t.verb<-"statistically significant"
+        mys.conclusion<-"We reject the Null Hypothesis and accept the Alternative Hypothesis."
+        mys.samp.t.verbose.testing<-paste("\begin{itemize}\item $H_0: \, \mu_1-\mu_0=",mys@null,"$\item $H_a: \, \mu_1-\mu_0 ",mys@samp.t.sig.sign,mys@null,"$\item $\alpha=",mys@alpha,"$\item The pooled standard deviation is $s=\sqrt{\frac{s_1^2 \cdot (n_1-1)+s_0^2 \cdot (n_0-1)}{n_1+n_0-2}}=\sqrt{\frac{",mys@samp.sd.1,"^2 \cdot (",mys@samp.size.1,"-1)+",mys@samp.sd.0,"^2 \cdot (",mys@samp.size.0,"-1)}{",mys@samp.size.1,"+",mys@samp.size.0,"-2}}=",mys@pooled.s,"$ \item $t=\frac{\bar x_1-\bar x_0-",mys@null,"}{SE_{\bar X_1-\bar X_0}}=\frac{",mys@estimator,"-",mys@null,"}{\sqrt{\frac{",mys@pooled.s,"^2}{",mys@samp.size.1,"}+\frac{",mys@pooled.s,"^2}{",mys@samp.size.0,"}}}=\frac{",mys@numerator,"}{",mys@se.estimator,"}=",samp.t,"$\item ",mys@samp.t.pvalue,"\item ",mys@conclusion,"\end{itemize}",sep="")
+      }else{
+        mys.samp.t.sig<-F
+        mys.samp.t.sig.sign<-">"
+        mys.samp.t.verb<-"not statistically significant"
+        mys.conclusion<-"We fail to reject the Null Hypothesis."
+        mys.samp.t.verbose.testing<-paste("\begin{itemize}\item $H_0: \, \mu_1-\mu_0=",mys@null,"$\item $H_a: \, \mu_1-\mu_0 ",mys@samp.t.sig.sign,mys@null,"$\item $\alpha=",mys@alpha,"$\item The pooled standard deviation is $s=\sqrt{\frac{s_1^2 \cdot (n_1-1)+s_0^2 \cdot (n_0-1)}{n_1+n_0-2}}=\sqrt{\frac{",mys@samp.sd.1,"^2 \cdot (",mys@samp.size.1,"-1)+",mys@samp.sd.0,"^2 \cdot (",mys@samp.size.0,"-1)}{",mys@samp.size.1,"+",mys@samp.size.0,"-2}}=",mys@pooled.s,"$ \item $t=\frac{\bar x_1-\bar x_0-",mys@null,"}{SE_{\bar X_1-\bar X_0}}=\frac{",mys@estimator,"-",mys@null,"}{\sqrt{\frac{",mys@samp.sd.1,"^2}{",mys@samp.size.1,"}+\frac{",mys@samp.sd.0,"^2}{",mys@samp.size.0,"}}}=\frac{",mys@numerator,"}{",mys@se.estimator,"}=",samp.t,"$\item ",mys@samp.t.pvalue,"\item ",mys@conclusion,"\end{itemize}",sep="")
+      }
+    }
+    else {
+      # T distribution different standard deviations
+      mys@df<-min(mys@samp.size.0,mys@samp.size.1)-1
+      mys@se.estimator<-ceiling(1000*sqrt(mys@samp.sd.0^2/mys@samp.size.0+mys@samp.sd.1^2/mys@samp.size.1))/1000
+      ftb<-c(1000,100,80,60,50,40,30:1)
+      ptb<-c(50,(5:1)*5,2.5,2,1,0.5,0.25,0.1,0.05,0)/100
+      mys@df.D<-ftb[(ftb<=mys@samp.df)][1]
+      mys@tstar<-round(abs(qt(1-mys@confidence.level/100,mys@df.D)),3)
+      mys@margin<-ceiling(1000*mys@tstar*mys@se.estimator)/1000
+      mys@ci<-c(mys@estimator-mys@margin,mys@estimator+mys@margin)
+      mys@ci.lb<-mys@ci[1]
+      mys@ci.ub<-mys@ci[2]
+      mys@verbose.confidence.interval<-paste("The confidence interval is centered at the value of the estimator is the difference between sample means, that is $\bar x_1-\bar x_0=",mys@samp.mean.1,"-",mys@samp.mean.0,"=",mys@estimator,"$. The standard error of the estimator is $SE_{\bar X_1-\bar X_0}=\sqrt{\frac{s_1^2}{n_1}+\frac{s_0^2}{n_0}}=\sqrt{\frac{",mys@samp.sd.1,"^2}{",mys@samp.size.1,"}+\frac{"mys@samp.sd.1,"^2}{",mys@samp.size.1,"}}=",mys@se.estimator,"$. The number of degrees of freedom is the smaller number of degrees of freedom in each sample, which in this case is ",mys@df,". We will use a conservative number of degrees of freedom from Table D, that is ",mys.df.D,". The critical value for a $",mys@confidence.level,"$\% confidence interval is $t^*="mys@t.star,"$, so the margin of error is $m=t^* \cdot SE_{\bar X_1-\bar X_0}=",mys@t.star," \cdot ",mys@se.estimator,"=",mys@margin,"$. The confidence interval is $[\bar x_1-\bar x_0-m,\bar x_1-\bar x_0+m]=[",mys@estimator,"-",mys@margin","mys@estimator,"+",mys@margin,"]=[",mys@ci.lb,",",mys@ci.ub,"]$.",sep="")
+      # Hypothesis testing
+      mys@numerator<-mys@estimator-mys@null
+      mys@samp.t<-ceiling(100*mys@numerator/mys@se.estimator)/100
+      if(mys@two.tail==1) {
+        mys@samp.t.p<-2*c(ptb[(ptb<abs(mys@samp.t))][1],ptb[(ptb>abs(mys@samp.t))][length(ptb[(ptb>abs(mys@samp.t))])])
+        mys@samp.t.pvalue<-paste("The p-value is $2 \cdot P(T>|t|)=2 \cdot P(T>|",mys@samp.t,"|)$ in the t-distribution with ",mys@df," degrees of freedom. Using ",mys@df.D," degrees of freedom from Table D, $P(T>",abs(mys@samp.t),") \in (",mys@samp.t.p[1]/2,",",mys@samp.t.p[2]/2,")$ so the p-value is in the $(",mys@samp.t.p[1],",",mys@samp.t.p[2],")$ interval.",sep="")
+      }else{
+        if(mys@greater.than==1) {
+          if(mys@samp.t>0) {
+            mys@samp.t.p<-c(ptb[(ptb<abs(mys@samp.t))][1],ptb[(ptb>abs(mys@samp.t))][length(ptb[(ptb>abs(mys@samp.t))])])
+            mys@samp.t.pvalue<-paste("The p-value is $P(T>t)=P(T>",mys@samp.t,")$ in the t-distribution with ",mys@df," degrees of freedom. Using ",mys@df.D," degrees of freedom from Table D, $P(T>",mys@samp.t,") \in (",mys@samp.t.p[1],",",mys@samp.t.p[2],")$.",sep="")
+          }else{
+            mys@samp.t.p<-1-c(ptb[(ptb>abs(mys@samp.t))][length(ptb[(ptb>abs(mys@samp.t))])],ptb[(ptb<abs(mys@samp.t))][1])
+            mys@samp.t.pvalue<-paste("The p-value is $P(T<t)=P(T<",mys@samp.t,")$ in the t-distribution with ",mys@df," degrees of freedom. That is larger than 50\%. More precisely, using ",mys@df.D," degrees of freedom from Table D, $P(T>",mys@samp.t,")=P(T<",-mys@samp.t,")=1-P(T>",-mys@samp.t,") \in (",mys@samp.t.p[1],",",mys@samp.t.p[2],")$.",sep="")
+          }
+        }else {
+          if(mys@samp.t<0) {
+            mys@samp.t.p<-c(ptb[(ptb<abs(mys@samp.t))][1],ptb[(ptb>abs(mys@samp.t))][length(ptb[(ptb>abs(mys@samp.t))])])
+            mys@samp.t.pvalue<-paste("The p-value is $P(T<t)=P(T<",mys@samp.t,")=P(T>",-mys@samp.t,")$ in the t-distribution with ",mys@df," degrees of freedom. Using ",mys@df.D," degrees of freedom from Table D, $P(T>",-mys@samp.t,") \in (",mys@samp.t.p[1],",",mys@samp.t.p[2],")$.",sep="")
+          }else {
+            mys@samp.t.p<-1-c(ptb[(ptb>abs(mys@samp.t))][length(ptb[(ptb>abs(mys@samp.t))])],ptb[(ptb<abs(mys@samp.t))][1])
+            mys@samp.t.pvalue<-paste("The p-value is $P(T<t)=P(T<",mys@samp.t,")$ in the t-distribution with ",mys@df," degrees of freedom. That is larger than 50\%. More precisely, using ",mys@df.D," degrees of freedom from Table D, $P(T<",mys@samp.t,")=1-P(T>",mys@samp.t,") \in (",mys@samp.t.p[1],",",mys@samp.t.p[2],")$.",sep="")
+          }
+        }
+      }
+      if(mys@samp.t.p[1] < mys@alpha){
+        mys.samp.t.sig<-T
+        mys.samp.t.sig.sign<-"<"
+        mys.samp.t.verb<-"statistically significant"
+        mys.conclusion<-"We reject the Null Hypothesis and accept the Alternative Hypothesis."
+        mys.samp.t.verbose.testing<-paste("\begin{itemize}\item $H_0: \, \mu_1-\mu_0=",mys@null,"$\item $H_a: \, \mu_1-\mu_0 ",mys@samp.t.sig.sign,mys@null,"$\item $\alpha=",mys@alpha,"$\item $t=\frac{\bar x_1-\bar x_0-",mys@null,"}{SE_{\bar X_1-\bar X_0}}=\frac{",mys@estimator,"-",mys@null,"}{\sqrt{\frac{",mys@samp.sd.1,"^2}{",mys@samp.size.1,"}+\frac{",mys@samp.sd.0,"^2}{",mys@samp.size.0,"}}}=\frac{",mys@numerator,"}{",mys@se.estimator,"}=",samp.t,"$\item ",mys@samp.t.pvalue,"\item ",mys@conclusion,"\end{itemize}",sep="")
+      }else{
+        mys.samp.t.sig<-F
+        mys.samp.t.sig.sign<-">"
+        mys.samp.t.verb<-"not statistically significant"
+        mys.conclusion<-"We fail to reject the Null Hypothesis."
+        mys.samp.t.verbose.testing<-paste("\begin{itemize}\item $H_0: \, \mu_1-\mu_0=",mys@null,"$\item $H_a: \, \mu_1-\mu_0 ",mys@samp.t.sig.sign,mys@null,"$\item $\alpha=",mys@alpha,"$\item $t=\frac{\bar x_1-\bar x_0-",mys@null,"}{SE_{\bar X_1-\bar X_0}}=\frac{",mys@estimator,"-",mys@null,"}{\sqrt{\frac{",mys@samp.sd.1,"^2}{",mys@samp.size.1,"}+\frac{",mys@samp.sd.0,"^2}{",mys@samp.size.0,"}}}=\frac{",mys@numerator,"}{",mys@se.estimator,"}=",samp.t,"$\item ",mys@samp.t.pvalue,"\item ",mys@conclusion,"\end{itemize}",sep="")
+      }
+    }
+  }
+}
