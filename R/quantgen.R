@@ -171,7 +171,7 @@ setClass("sampleDist",
 #' @examples sampleDist(sd = 1, mean = 0, size = 100)
 #'
 #' @export sampleDist
-sampleDist<-function(sample=NA, population=NA, size=NA_real_, mean=NA_real_, sd=NA_real_, samp.size=NA_real_, samp.mean=NA_real_, samp.sd=NA_real_, alpha=NA_real_, level=NA_real_, two.tail=NA_real_, greater.than=NA_real_){
+sampleDist<-function(sample=NA, population=NA, size=NA_real_, mean=NA_real_, sd=NA_real_, se=NA_real_, samp.size=NA_real_, samp.mean=NA_real_, samp.sd=NA_real_, samp.se=NA_real_, alpha=NA_real_, level=NA_real_, two.tail=NA_real_, greater.than=NA_real_){
   ## sd when true value, se when estimated
   if(isS4(sample)){
     mys<-sample
@@ -198,6 +198,9 @@ sampleDist<-function(sample=NA, population=NA, size=NA_real_, mean=NA_real_, sd=
     }
     if(!is.na(sd)){
       mys@sd<-sd
+    }else(!is.na(se)){
+      mys@se<-se
+      mys@sd<-mys@se*sqrt(mys@size)
     }
     if(!is.na(mys@size) && !is.na(mys@mean) && is.na(mys@sd) && (!is.na(size) || !is.na(mean) || !is.na(sd))){
       mys@population<-as.vector(mys@mean+mys@sd*scale(rnorm(mys@size)))
@@ -226,6 +229,9 @@ sampleDist<-function(sample=NA, population=NA, size=NA_real_, mean=NA_real_, sd=
   }
   if(!is.na(samp.sd)){
     mys@samp.sd<-samp.sd
+  }else(!is.na(samp.se)){
+    mys@samp.se<-samp.se
+    mys@samp.sd<-mys@samp.se*sqrt(mys@samp.size)
   }
   if(!is.na(mys@population)){
     mys@median<-median(mys@population)
@@ -239,7 +245,9 @@ sampleDist<-function(sample=NA, population=NA, size=NA_real_, mean=NA_real_, sd=
   }
   mys@df<-mys@size-1
   mys@var<-mys@sd^2
-  mys@se<-mys@sd/sqrt(mys@size)
+  if(!is.na(se)){
+    mys@se<-mys@sd/sqrt(mys@size)
+  }
   if(!is.na(mys@mean) && !is.na(mys@samp.mean)){
     if(!is.na(mys@sd)){
       mys@z<-(mys@samp.mean-mys@mean)/mys@sd
@@ -296,7 +304,9 @@ sampleDist<-function(sample=NA, population=NA, size=NA_real_, mean=NA_real_, sd=
       }
       if(!is.na(mys@samp.sd)){
         mys@samp.var<-mys@samp.sd^2
-        mys@samp.se<-mys@samp.sd/sqrt(mys@samp.size)
+        if(!is.na(samp.se)){
+          mys@samp.se<-mys@samp.sd/sqrt(mys@samp.size)
+        }
         ftb<-c(1000,100,80,60,50,40,30:1)
         ptb<-c(100,(5:1)*5,2.5,2,1,0.5,0.25,0.1,0.05)/100
         mys@samp.t<-(mys@samp.mean-mys@mean)/mys@samp.se
