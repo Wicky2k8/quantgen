@@ -198,10 +198,10 @@ sampleDist<-function(sample=NA, population=NA, size=NA_real_, mean=NA_real_, sd=
     if(!is.na(mean)){
       mys@mean<-mean
     }
+    mys@sd <- 1
     if(!is.na(sd)){
       mys@sd<-sd
     }
-    mys@sd <- 1
     else if(!is.na(se)){
       mys@se<-se
       mys@sd<-mys@se*sqrt(mys@size)
