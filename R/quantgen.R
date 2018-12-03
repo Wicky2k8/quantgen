@@ -198,7 +198,6 @@ sampleDist<-function(sample=NA, population=NA, size=NA_real_, mean=NA_real_, sd=
     if(!is.na(mean)){
       mys@mean<-mean
     }
-    mys@sd <- 1
     if(!is.na(sd)){
       mys@sd<-sd
     }
@@ -250,7 +249,7 @@ sampleDist<-function(sample=NA, population=NA, size=NA_real_, mean=NA_real_, sd=
   }
   mys@df<-mys@size-1
   mys@var<-mys@sd^2
-  if(!is.na(se)){
+  if(is.na(se)){
     mys@se<-mys@sd/sqrt(mys@size)
   }
   if(!is.na(mys@mean) && !is.na(mys@samp.mean)){
@@ -309,7 +308,7 @@ sampleDist<-function(sample=NA, population=NA, size=NA_real_, mean=NA_real_, sd=
       }
       if(!is.na(mys@samp.sd)){
         mys@samp.var<-mys@samp.sd^2
-        if(!is.na(samp.se)){
+        if(is.na(samp.se)){
           mys@samp.se<-mys@samp.sd/sqrt(mys@samp.size)
         }
         ftb<-c(1000,100,80,60,50,40,30:1)
