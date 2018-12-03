@@ -325,7 +325,7 @@ sampleDist<-function(sample=NA, population=NA, size=NA_real_, mean=NA_real_, sd=
         else{
           mys@samp.t.p<-pt(mys@samp.t, df=ftb[(ftb<=mys@samp.df)][1])
         }
-        mys@samp.t.p<-c(ptb[(ptb<=mys@samp.t.p)][1],tail(ptb[(ptb>=0.03)],n=1))*(1+mys@two.tail)
+        mys@samp.t.p<-c(ptb[(ptb<=mys@samp.t.p)][1],tail(ptb[(ptb>=mys@samp.t.p)],n=1))*(1+mys@two.tail)
         if(!is.na(mys@alpha)){
           if(mys@samp.t.p[1] < mys@alpha){
             mys@samp.t.sig<-T
