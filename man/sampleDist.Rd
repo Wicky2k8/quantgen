@@ -5,8 +5,8 @@
 \title{sampleDist}
 \usage{
 sampleDist(sample = NA, population = NA, size = NA_real_,
-  mean = NA_real_, sd = NA_real_, samp.size = NA_real_,
-  samp.mean = NA_real_, samp.sd = NA_real_, alpha = NA_real_,
+  mean = NA_real_, sd = NA_real_, se = NA_real_, samp.size = NA_real_,
+  samp.mean = NA_real_, samp.sd = NA_real_, samp.se = NA_real_, alpha = NA_real_,
   level = NA_real_, two.tail = NA_real_, greater.than = NA_real_)
 }
 \arguments{
