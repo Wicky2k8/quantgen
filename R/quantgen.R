@@ -200,7 +200,9 @@ sampleDist<-function(sample=NA, population=NA, size=NA_real_, mean=NA_real_, sd=
     }
     if(!is.na(sd)){
       mys@sd<-sd
-    }else if(!is.na(se)){
+    }
+    mys@sd <- 1
+    else if(!is.na(se)){
       mys@se<-se
       mys@sd<-mys@se*sqrt(mys@size)
     }
@@ -231,7 +233,8 @@ sampleDist<-function(sample=NA, population=NA, size=NA_real_, mean=NA_real_, sd=
   }
   if(!is.na(samp.sd)){
     mys@samp.sd<-samp.sd
-  }else if(!is.na(samp.se)){
+  }
+  else if(!is.na(samp.se)){
     mys@samp.se<-samp.se
     mys@samp.sd<-mys@samp.se*sqrt(mys@samp.size)
   }
