@@ -311,6 +311,8 @@ sampleDist<-function(sample=NA, population=NA, size=NA_real_, mean=NA_real_, sd=
         if(is.na(samp.se)){
           mys@samp.se<-mys@samp.sd/sqrt(mys@samp.size)
         }
+      }
+      if(!is.na(mys@samp.se)){
         ftb<-c(1000,100,80,60,50,40,30:1)
         ptb<-c(100,(5:1)*5,2.5,2,1,0.5,0.25,0.1,0.05)/100
         mys@samp.t<-(mys@samp.mean-mys@mean)/mys@samp.se
