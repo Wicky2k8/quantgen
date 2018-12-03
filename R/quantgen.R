@@ -158,9 +158,11 @@ setClass("sampleDist",
 #' @param size Size of the population
 #' @param mean Mean of the population
 #' @param sd Standard Deviation of the population
+#' @param se Standard Error of the population
 #' @param samp.size Size of the sample
 #' @param samp.mean Mean of the sample
 #' @param samp.sd Standard Deviation of the sample
+#' @param samp.se Standard Error of the sample
 #' @param alpha Alpha for signficance testing
 #' @param level Level for confidence intervals
 #' @param two.tail TRUE for Two-Tailed testing, FALSE for One-Tailed (Defaults to FALSE)
