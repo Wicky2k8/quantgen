@@ -312,30 +312,30 @@ sampleDist<-function(sample=NA, population=NA, size=NA_real_, mean=NA_real_, sd=
           mys@samp.se<-mys@samp.sd/sqrt(mys@samp.size)
         }
       }
-    }
-    if(!is.na(mys@samp.se)){
-      ftb<-c(1000,100,80,60,50,40,30:1)
-      ptb<-c(100,(5:1)*5,2.5,2,1,0.5,0.25,0.1,0.05)/100
-      mys@samp.t<-(mys@samp.mean-mys@mean)/mys@samp.se
-      if(mys@two.tail==1){
-        mys@samp.t.p<-pt(-abs(mys@samp.t), df=ftb[(ftb<=mys@samp.df)][1])
-      }
-      else if(mys@greater.than==1){
-        mys@samp.t.p<-pt(-mys@samp.t, df=ftb[(ftb<=mys@samp.df)][1])
-      }
-      else{
-        mys@samp.t.p<-pt(mys@samp.t, df=ftb[(ftb<=mys@samp.df)][1])
-      }
-      mys@samp.t.p<-c(ptb[(ptb<=mys@samp.t.p)][1],tail(ptb[(ptb>=0.03)],n=1))*(1+mys@two.tail)
-      if(!is.na(mys@alpha)){
-        if(mys@samp.t.p[1] < mys@alpha){
-          mys@samp.t.sig<-T
-          mys@samp.t.sig.sign<-"<"
-          mys@samp.t.sig.verb<-"significant"
-        }else{
-          mys@samp.t.sig<-F
-          mys@samp.t.sig.sign<-">"
-          mys@samp.t.sig.verb<-"not significant"
+      if(!is.na(mys@samp.se)){
+        ftb<-c(1000,100,80,60,50,40,30:1)
+        ptb<-c(100,(5:1)*5,2.5,2,1,0.5,0.25,0.1,0.05)/100
+        mys@samp.t<-(mys@samp.mean-mys@mean)/mys@samp.se
+        if(mys@two.tail==1){
+          mys@samp.t.p<-pt(-abs(mys@samp.t), df=ftb[(ftb<=mys@samp.df)][1])
+        }
+        else if(mys@greater.than==1){
+          mys@samp.t.p<-pt(-mys@samp.t, df=ftb[(ftb<=mys@samp.df)][1])
+        }
+        else{
+          mys@samp.t.p<-pt(mys@samp.t, df=ftb[(ftb<=mys@samp.df)][1])
+        }
+        mys@samp.t.p<-c(ptb[(ptb<=mys@samp.t.p)][1],tail(ptb[(ptb>=0.03)],n=1))*(1+mys@two.tail)
+        if(!is.na(mys@alpha)){
+          if(mys@samp.t.p[1] < mys@alpha){
+            mys@samp.t.sig<-T
+            mys@samp.t.sig.sign<-"<"
+            mys@samp.t.sig.verb<-"significant"
+          }else{
+            mys@samp.t.sig<-F
+            mys@samp.t.sig.sign<-">"
+            mys@samp.t.sig.verb<-"not significant"
+          }
         }
       }
     }
