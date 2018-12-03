@@ -222,7 +222,9 @@ sampleDist<-function(sample=NA, population=NA, size=NA_real_, mean=NA_real_, sd=
   }
   if(!is.na(two.tail)){
     mys@two.tail<-two.tail
-    mys@sign<-"neq"
+    if(mys@two.tail){
+      mys@sign<-"neq"
+    }
   }
   if(!is.na(samp.mean)){
     mys@samp.mean<-samp.mean
