@@ -19,6 +19,8 @@ sampleDist(sample = NA, population = NA, size = NA_real_,
 \item{mean}{Mean of the population}
 
 \item{sd}{Standard Deviation of the population}
+  
+\item{se}{Standard Error of the population}
 
 \item{samp.size}{Size of the sample}
 
@@ -26,6 +28,8 @@ sampleDist(sample = NA, population = NA, size = NA_real_,
 
 \item{samp.sd}{Standard Deviation of the sample}
 
+\item{samp.se}{Standard Error of the sample}
+  
 \item{alpha}{Alpha for signficance testing}
 
 \item{level}{Level for confidence intervals}
