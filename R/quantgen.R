@@ -218,7 +218,9 @@ sampleDist<-function(sample=NA, population=NA, size=NA_real_, mean=NA_real_, sd=
   mys@sign<-"<"
   if(!is.na(greater.than)){
     mys@greater.than<-greater.than
-    mys@sign<-">"
+    if(mys@greater.than){
+      mys@sign<-">"
+    }
   }
   if(!is.na(two.tail)){
     mys@two.tail<-two.tail
